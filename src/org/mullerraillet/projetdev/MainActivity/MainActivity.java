@@ -1,4 +1,4 @@
-package org.mullerraillet.projetdev.Widget;
+package org.mullerraillet.projetdev.MainActivity;
 
 import java.io.IOException;
 
@@ -28,8 +28,8 @@ public class MainActivity extends Activity {
 	volatile static Bluetooth bt;
 	String vitesse = "1"; // Vitesse normal
 	ProgressBar saProgressBar;
-	ToggleButton swi;
-	
+	ToggleButton SwitchOnOff;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,11 +38,11 @@ public class MainActivity extends Activity {
 		saProgressBar = (ProgressBar) findViewById(R.id.chargementBatterie);
 		bt = new Bluetooth(getApplicationContext(),saProgressBar);
 
-		swi = (ToggleButton)  findViewById(R.id.ToggleButtun1);
+		SwitchOnOff = (ToggleButton)  findViewById(R.id.ToggleButtun1);
 		final RadioGroup RG = (RadioGroup) findViewById(R.id.radioGroup1);
 		final Button klaxon = (Button) findViewById(R.id.button1);
-		
-		
+
+
 		klaxon.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}});
 
 		RG.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -72,35 +72,34 @@ public class MainActivity extends Activity {
 
 
 
-		swi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		SwitchOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 				if(!b)
 				{
 					try {
 						bt.closeBT();
-					} catch (IOException e) {
-
-					} catch (Exception e)
+					}catch (Exception e)
 					{
-						Toast.makeText(getApplicationContext(), "L'apparail est déjà déconnecter ", Toast.LENGTH_LONG).show();
-
+						Toast.makeText(getApplicationContext(), "L'apparail est déjà déconnecté", Toast.LENGTH_LONG).show();
 					}
 				}else
 				{
 					try
 					{
-						bt.findBT();
-						bt.openBT();
+						if(bt.findBT())
+							bt.openBT();
+						else
+							Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
 					} catch (IOException er)
 					{
-						swi.setChecked(false);
+						SwitchOnOff.setChecked(false);
 					}
 				}
 			}
 		});
 
-		
+
 
 
 		txtX = (TextView)findViewById(R.id.TextViewX);
@@ -109,25 +108,25 @@ public class MainActivity extends Activity {
 		joystick.setOnJostickMovedListener(_listener);
 		bt.setOnBluetoothListener(_ListenerBluetooth);
 	}
-	
-	
+
+
 	private BluetoothListener _ListenerBluetooth = new BluetoothListener()
 	{
 		public void onConnect()
 		{
-		swi.setChecked(true);
+			SwitchOnOff.setChecked(true);
 		}
 		public void onDisconnect()
 		{
-		swi.setChecked(false);
-		Toast.makeText(getApplicationContext(), "Connexion perdue", Toast.LENGTH_LONG).show();
+			SwitchOnOff.setChecked(false);
+			Toast.makeText(getApplicationContext(), "Connexion perdue", Toast.LENGTH_LONG).show();
 		}
 
 	};
 
-	
-	
-	
+
+
+
 	private JoystickMovedListener _listener = new JoystickMovedListener() {
 
 		@Override
@@ -136,8 +135,8 @@ public class MainActivity extends Activity {
 		public void OnMoved(int pan, int tilt) {
 			txtX.setText(": "+Integer.toString(pan));
 			txtY.setText(": "+Integer.toString(tilt));
-			
-			
+
+
 			try {
 				bt.sendData("[CMD,"+Integer.toString(pan)+","+Integer.toString(tilt)+","+vitesse+"]\n");
 			} catch (IOException e) {

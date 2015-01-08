@@ -61,20 +61,14 @@ public class Bluetooth extends Activity
 
 	public Bluetooth(Context mainContext, ProgressBar uneProgressBar)
 	{
-
 		this.mainContext = mainContext;
 		this.saProgressBar = uneProgressBar;
-
-
-
 	}
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-
 		if(sonBluetoothReceiver == null)
 		{
 			IntentFilter filter = new IntentFilter();
@@ -87,9 +81,10 @@ public class Bluetooth extends Activity
 
 
 
-	public void findBT() throws IOException
+	public boolean findBT() throws IOException
 	{
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		boolean flag= false;
 		if(mBluetoothAdapter == null)
 		{
 			Toast.makeText(mainContext, "Le bluetooth n'est pas activé ", Toast.LENGTH_LONG).show();
@@ -99,10 +94,7 @@ public class Bluetooth extends Activity
 		if(!mBluetoothAdapter.isEnabled())
 		{
 			Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-
 			startActivityForResult(enableBluetooth, 0);
-
-
 		}
 
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -113,10 +105,12 @@ public class Bluetooth extends Activity
 				if(device.getName().equals("HC-06"))
 				{
 					mmDevice = device;
+					flag = true;
 					break;
 				}
 			}
 		}
+		return flag;
 	}
 
 	public void openBT() throws IOException
@@ -134,17 +128,9 @@ public class Bluetooth extends Activity
 		mmSocket.connect();
 		mmOutputStream = mmSocket.getOutputStream();
 		mmInputStream = mmSocket.getInputStream();
-
-
-
-
-
 		beginListenForData();
 
 	}
-
-
-
 
 
 	void beginListenForData()
@@ -163,7 +149,6 @@ public class Bluetooth extends Activity
 				{
 					try
 					{
-
 						int bytesAvailable = mmInputStream.available();
 						if(bytesAvailable > 0)
 						{
@@ -184,8 +169,8 @@ public class Bluetooth extends Activity
 										{
 											try
 											{
-
-												saProgressBar.setProgress(Integer.parseInt( data.substring(data.indexOf(",")+1, data.indexOf("]")))) ;
+												saProgressBar.setProgress(Integer.parseInt( data.substring(data.indexOf(",")+1, data.indexOf("]"))));
+												
 											}catch(NumberFormatException e)
 											{
 												// DO nothing ( Si le nombre est pas le bon
@@ -216,8 +201,6 @@ public class Bluetooth extends Activity
 
 	public void sendData(String msg) throws IOException
 	{
-
-
 		msg += "\n";
 		try
 		{
@@ -238,22 +221,4 @@ public class Bluetooth extends Activity
 		mmSocket.close();
 	}
 
-	protected int CRC8(String stringData) {
-		int len = stringData.length();
-		int i = 0;
-		byte crc = 0x00;
-		while (len-- > 0) {
-			byte extract = (byte) stringData.charAt(i++);
-			for (byte tempI = 8; tempI != 0; tempI--) {
-				byte sum = (byte) ((crc & 0xFF) ^ (extract & 0xFF));
-				sum = (byte) ((sum & 0xFF) & 0x01); // I had Problems writing this as one line with previous
-				crc = (byte) ((crc & 0xFF) >>> 1);
-				if (sum != 0) {
-					crc = (byte)((crc & 0xFF) ^ 0x8C);
-				}
-				extract = (byte) ((extract & 0xFF) >>> 1);
-			}
-		}
-		return (int) (crc & 0xFF);
-	}
 }

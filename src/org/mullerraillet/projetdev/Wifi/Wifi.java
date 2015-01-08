@@ -1,4 +1,4 @@
-package org.mullercamille.projetdev.Wifi;
+package org.mullerraillet.projetdev.Wifi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
