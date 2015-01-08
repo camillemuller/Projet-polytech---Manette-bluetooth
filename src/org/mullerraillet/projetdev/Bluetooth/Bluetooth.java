@@ -42,6 +42,9 @@ public class Bluetooth extends Activity
 	ProgressBar saProgressBar;
 	static BluetoothListener sonListener;
 	static BluetoothReceiver sonBluetoothReceiver;
+	
+	final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
+	final String DeviceName = "HC-06";
 
 
 
@@ -102,7 +105,7 @@ public class Bluetooth extends Activity
 		{
 			for(BluetoothDevice device : pairedDevices)
 			{
-				if(device.getName().equals("HC-06"))
+				if(device.getName().equals(DeviceName))
 				{
 					mmDevice = device;
 					flag = true;
@@ -115,14 +118,14 @@ public class Bluetooth extends Activity
 
 	public void openBT() throws IOException
 	{
-		UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
+		UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
 
 		try
 		{mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
 		}
 		catch (Exception e)
 		{
-			Toast.makeText(mainContext, "Votre module bluetooth n'est pas appareillé dans vos parametres bluetooth", Toast.LENGTH_LONG).show();
+			Toast.makeText(mainContext, "Probleme de communication", Toast.LENGTH_LONG).show();
 			throw new IOException();
 		}
 		mmSocket.connect();
