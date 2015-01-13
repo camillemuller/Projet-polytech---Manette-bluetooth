@@ -15,12 +15,15 @@ public class ManetteBluetooth extends Application {
 		/* Create and setup the model with saved values */
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		String module = prefs.getString("moduleBluetooth", "0");
-		
-		if(module != "")
-		this.module = new Bluetooth(this.getApplicationContext(),module);
+		createBluetooth( prefs.getString("moduleBluetooth", "0"));
 	}
 
+	
+	public void createBluetooth(String unModule)
+	{
+		if(unModule != "")
+		this.module = new Bluetooth(this.getApplicationContext(),unModule);
+	}
 
 	public Bluetooth getModule() {
 		return module;

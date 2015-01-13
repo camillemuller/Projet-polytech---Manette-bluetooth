@@ -51,6 +51,20 @@ public class MainActivity extends Activity {
 	
 	
 	
+	/**
+	 * On reviens sur cette activité après était sur une autre.
+	 */
+	protected void onResume() {
+		super.onResume();
+
+		// On recharge le nouveau listener après avoir changer l'ancien
+		this.SwitchOnOff.setChecked(false);
+		// Si le module Bluetooth n'est pas null -> Pas de Bluetooth ... Rien de select ...
+		if(((ManetteBluetooth)this.getApplication()).getModule() != null )
+		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
+
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -124,6 +138,9 @@ public class MainActivity extends Activity {
 		txtY = (TextView)findViewById(R.id.TextViewY);
 		joystick = (JoystickView)findViewById(R.id.joystickView);
 		joystick.setOnJostickMovedListener(_listener);
+		
+		
+		
 		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
 	}
 
