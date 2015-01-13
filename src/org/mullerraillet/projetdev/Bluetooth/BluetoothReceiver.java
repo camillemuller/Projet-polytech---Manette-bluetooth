@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import org.mullerraillet.projetdev.Application.ManetteBluetooth;
 
 public class BluetoothReceiver  extends BroadcastReceiver {
 
@@ -12,14 +13,17 @@ public class BluetoothReceiver  extends BroadcastReceiver {
 		// TODO Auto-generated method stub
 		String action = intent.getAction();
 
-		if(Bluetooth.sonListener != null)
+		ManetteBluetooth uneM = ((ManetteBluetooth) (context.getApplicationContext()));
+		
+		if(uneM.getModule().getSonListener() != null)
 		{
 			if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-				Bluetooth.sonListener.onConnect();
+					
+					uneM.getModule().getSonListener().onConnect();
 			}
 
 			if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-				Bluetooth.sonListener.onDisconnect();
+					uneM.getModule().getSonListener().onDisconnect();
 			}
 		}
 

@@ -14,12 +14,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,45 +28,62 @@ import java.util.UUID;
 
 public class Bluetooth extends Activity 	  
 {
-	BluetoothAdapter mBluetoothAdapter;
-	BluetoothSocket mmSocket;
-	static BluetoothDevice mmDevice;
-	OutputStream mmOutputStream;
-	InputStream mmInputStream;
-	Thread workerThread;
-	byte[] readBuffer;
-	int readBufferPosition;
-	int counter;
-	volatile boolean stopWorker;
-	String lesData;
-	Context mainContext;
-	ProgressBar saProgressBar;
-	static BluetoothListener sonListener;
-	static BluetoothReceiver sonBluetoothReceiver;
+	private BluetoothAdapter mBluetoothAdapter;
+	private BluetoothSocket mmSocket;
+	private static BluetoothDevice mmDevice;
+	private OutputStream mmOutputStream;
+	private InputStream mmInputStream;
+	private Thread workerThread;
+	private byte[] readBuffer;
+	private int readBufferPosition;
+	private volatile boolean stopWorker;
+	private String lesData;
+	private Context mainContext;
+	private BluetoothListener sonListener;
 	
-	final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
-	final String DeviceName = "HC-06";
+	
+
+	
+	public BluetoothListener getSonListener() {
+		return sonListener;
+	}
+
+	public void setSonListener(BluetoothListener sonListener) {
+		this.sonListener = sonListener;
+	}
+
+	private  BluetoothReceiver sonBluetoothReceiver;
+	private final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
+	private String DeviceName;
 
 
 
 	public void setOnBluetoothListener(BluetoothListener unListener){
 		sonListener= unListener;
 	}
-
+ 
 	String getLesData()
 	{
 		return this.lesData;
 	}
 
-	void setLesData(String desData)
+	public void setLesData(String desData)
 	{
 		this.lesData = desData;
 	}
 
-	public Bluetooth(Context mainContext, ProgressBar uneProgressBar)
+	/**
+	 * Default constructor
+	 */
+	public Bluetooth()
+	{
+	}
+	
+	
+	public Bluetooth(Context mainContext, String module)
 	{
 		this.mainContext = mainContext;
-		this.saProgressBar = uneProgressBar;
+		this.DeviceName = module;
 	}
 
 	/** Called when the activity is first created. */
@@ -80,6 +98,32 @@ public class Bluetooth extends Activity
 			sonBluetoothReceiver = new BluetoothReceiver();
 			LocalBroadcastManager.getInstance(this).registerReceiver(new BluetoothReceiver(), filter);
 		}
+	}
+	
+	
+	
+	public List<String> getListpairedDevices()
+	{
+		List<String> paraidDevices = new ArrayList<String>();
+		
+		try
+		{
+		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+		if(pairedDevices.size() > 0)
+		{
+			for(BluetoothDevice device : pairedDevices)
+			{
+				paraidDevices.add(device.getName());
+			}
+		}
+	
+		}
+		catch(NullPointerException e)
+		{
+
+		}
+		return paraidDevices;
+		
 	}
 
 
@@ -136,7 +180,10 @@ public class Bluetooth extends Activity
 	}
 
 
-	void beginListenForData()
+	/**
+	 * Création du thread de reception des données bluetooth
+	 */
+	public void beginListenForData()
 	{
 		final Handler handler = new Handler();
 		final byte delimiter = 10; //This is the ASCII code for a newline character
@@ -146,6 +193,7 @@ public class Bluetooth extends Activity
 		readBuffer = new byte[1024];
 		workerThread = new Thread(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				while(!Thread.currentThread().isInterrupted() && !stopWorker)
@@ -168,19 +216,10 @@ public class Bluetooth extends Activity
 									readBufferPosition = 0;
 									handler.post(new Runnable()
 									{
+										@Override
 										public void run()
-										{
-											try
-											{
-												saProgressBar.setProgress(Integer.parseInt( data.substring(data.indexOf(",")+1, data.indexOf("]"))));
-												
-											}catch(NumberFormatException e)
-											{
-												// DO nothing ( Si le nombre est pas le bon
-											}catch(StringIndexOutOfBoundsException e)
-											{
-												//Do Nothing
-											}
+										{											
+												sonListener.onReceived(data);
 										}
 									});
 								}
@@ -202,6 +241,11 @@ public class Bluetooth extends Activity
 		workerThread.start();
 	}
 
+	/**
+	 * Fonction d'envoie des données vers l'appareil bluetooth
+	 * @param msg
+	 * @throws IOException
+	 */
 	public void sendData(String msg) throws IOException
 	{
 		msg += "\n";

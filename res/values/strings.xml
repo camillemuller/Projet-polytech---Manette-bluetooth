@@ -24,5 +24,6 @@
         <item>Lent</item>
         <item>Rapide</item>
     </string-array>
+    <string name="returnString">Retour vers la page principale</string>
 
 </resources>

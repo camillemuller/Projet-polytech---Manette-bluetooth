@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+	<PreferenceScreen
+		xmlns:android="http://schemas.android.com/apk/res/android">
+
+		<PreferenceCategory android:title="Bluetooth">
+			<ListPreference android:defaultValue="none"
+				android:enabled="false" android:entries="@array/ModuleBT"
+				android:entryValues="@array/ModuleBTVal"
+				android:key="estts_pref" android:title="Choix du module" />
+		</PreferenceCategory>
+		<PreferenceCategory android:title="Autres">
+			<Preference android:key="AboutBt" android:title="A propos" />
+		</PreferenceCategory>
+
+		<Preference android:background="#041A37" android:key="button"
+			android:title="@string/returnString" />
+
+		<PreferenceCategory></PreferenceCategory>
+
+	</PreferenceScreen>
