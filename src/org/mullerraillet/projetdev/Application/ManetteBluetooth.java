@@ -9,6 +9,10 @@ public class ManetteBluetooth extends Application {
 	private Bluetooth module;
 	
 
+	
+	/**
+	 * Création de l'activité et du module bluetooth lors du démarrage de l'application
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -19,17 +23,29 @@ public class ManetteBluetooth extends Application {
 	}
 
 	
+	/**
+	 * Création du module bluetooth sauf si pas de module choisi 
+	 * @param unModule
+	 */
 	public void createBluetooth(String unModule)
 	{
 		if(unModule != "")
 		this.module = new Bluetooth(this.getApplicationContext(),unModule);
 	}
 
+	/**
+	 * Getter module Bluetooth
+	 * @return
+	 */
 	public Bluetooth getModule() {
 		return module;
 	}
 
 
+	/**
+	 * Setter module Bluetooth
+	 * @param module
+	 */
 	public void setModule(Bluetooth module) {
 		this.module = module;
 	}

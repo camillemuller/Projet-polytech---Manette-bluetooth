@@ -6,6 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import org.mullerraillet.projetdev.Application.ManetteBluetooth;
 
+
+/**
+ * Classe bluetooth permettant la gestion de la detection lors de la perte de
+ * connexion Bluetooth
+ * @author camillemuller
+ *
+ */
 public class BluetoothReceiver  extends BroadcastReceiver {
 
 	@Override

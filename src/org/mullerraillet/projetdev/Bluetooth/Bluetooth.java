@@ -25,7 +25,12 @@ import java.util.Set;
 import java.util.UUID;
 
 
-
+/**
+ * Classe gérant la connection Bluetooth
+ * Permet de recevoir & envoyer des données vers un apparail choisit
+ * @author camillemuller
+ *
+ */
 public class Bluetooth extends Activity 	  
 {
 	private BluetoothAdapter mBluetoothAdapter;
@@ -43,14 +48,7 @@ public class Bluetooth extends Activity
 	
 	
 
-	
-	public BluetoothListener getSonListener() {
-		return sonListener;
-	}
 
-	public void setSonListener(BluetoothListener sonListener) {
-		this.sonListener = sonListener;
-	}
 
 	private  BluetoothReceiver sonBluetoothReceiver;
 	private final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
@@ -79,12 +77,26 @@ public class Bluetooth extends Activity
 	{
 	}
 	
-	
+	/**
+	 * Constructeur permettant d'avoir le context et de choisir un module
+	 * @param mainContext
+	 * @param module
+	 */
 	public Bluetooth(Context mainContext, String module)
 	{
 		this.mainContext = mainContext;
 		this.DeviceName = module;
 	}
+	
+	public BluetoothListener getSonListener() {
+		return sonListener;
+	}
+
+	public void setSonListener(BluetoothListener sonListener) {
+		this.sonListener = sonListener;
+	}
+	
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -127,7 +139,11 @@ public class Bluetooth extends Activity
 	}
 
 
-
+	/**
+	 * Permet d'initialisé la connexion bluetooth
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean findBT() throws IOException
 	{
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -160,6 +176,11 @@ public class Bluetooth extends Activity
 		return flag;
 	}
 
+	/**
+	 * Permet d'ouvrir une connexion Bluetooth
+	 * findBT() doit être utiliser au préalable
+	 * @throws IOException
+	 */
 	public void openBT() throws IOException
 	{
 		UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
@@ -260,6 +281,10 @@ public class Bluetooth extends Activity
 
 	}
 
+	/**
+	 * Permet de fermer la connexion Bluetooth
+	 * @throws IOException
+	 */
 	public void closeBT() throws IOException
 	{
 		stopWorker = true;

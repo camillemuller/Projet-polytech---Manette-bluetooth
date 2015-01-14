@@ -22,6 +22,7 @@ public class Pref extends PreferenceActivity implements
 SharedPreferences.OnSharedPreferenceChangeListener {
 
 
+	@SuppressWarnings("deprecation")
 	private void setEntries(CharSequence pref, CharSequence[] entries,
 			CharSequence[] values) {
 		ListPreference lp = (ListPreference) findPreference(pref);
@@ -30,6 +31,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 	}
 	
 
+	@SuppressWarnings("deprecation")
 	public void loadSettings() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -43,6 +45,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,6 +98,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 
 
+	@SuppressWarnings("deprecation")
 	public void affiche()
 	{
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -132,6 +136,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 			return null;
 		}
 		
+		@SuppressWarnings("deprecation")
 		protected void onPostExecute(Integer result) {
 
 

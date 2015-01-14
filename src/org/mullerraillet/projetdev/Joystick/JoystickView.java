@@ -1,5 +1,6 @@
 package org.mullerraillet.projetdev.Joystick;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -69,6 +70,7 @@ public class JoystickView extends View {
 	private int cX, cY;
 
 	//Size of the view in view coordinates
+	@SuppressWarnings("unused")
 	private int dimX, dimY;
 
 	//Cartesian coordinates of last touch point - joystick center is (0,0)
@@ -330,6 +332,8 @@ public class JoystickView extends View {
 		return pointerId;
 	}
 
+	@SuppressWarnings("deprecation")
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 	    final int action = ev.getAction();
