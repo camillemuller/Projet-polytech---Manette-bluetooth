@@ -24,6 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+
+/**
+ * Classe principale "La vue" Gerant l'activité de la fenetre principale
+ * @author camillemuller
+ *
+ */
 public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
 	private TextView txtX, txtY;
@@ -35,13 +41,19 @@ public class MainActivity extends Activity {
 	
 	
 	
-	
+
+	/**
+	 * Action effectuée lorsque l'on appuis sur le bouton Menu
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
+	/**
+	 * Action effectuée lorsqu'un item est selectionné dans le menu 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_search)
@@ -65,6 +77,9 @@ public class MainActivity extends Activity {
 
 	};
 	
+	/**
+	 * Appellé lors de la création de l'activité
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -172,6 +187,7 @@ public class MainActivity extends Activity {
 
 
 	/**
+	 * Réimplémentation du listener permettant : 
 	 * Gestion des actions graphiques en cas d'action du Joystick
 	 * Gestion des actions d'envoie des coordonnées
 	 */
@@ -191,6 +207,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
+
 
 		@Override
 		public void OnReleased() {
