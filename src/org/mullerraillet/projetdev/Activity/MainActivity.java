@@ -1,4 +1,4 @@
-package org.mullerraillet.projetdev.MainActivity;
+package org.mullerraillet.projetdev.Activity;
 
 import java.io.IOException;
 

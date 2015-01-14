@@ -20,11 +20,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
     
-                    <activity android:name="org.mullerraillet.projetdev.MainActivity.Pref" >
+                    <activity android:name="org.mullerraillet.projetdev.Activity.Pref" >
         </activity>
     
         <activity
-            android:name="org.mullerraillet.projetdev.MainActivity.MainActivity"
+            android:name="org.mullerraillet.projetdev.Activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
