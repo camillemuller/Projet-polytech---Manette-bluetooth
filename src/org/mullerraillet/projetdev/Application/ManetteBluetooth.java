@@ -8,7 +8,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class ManetteBluetooth extends Application {
 	private Bluetooth module;

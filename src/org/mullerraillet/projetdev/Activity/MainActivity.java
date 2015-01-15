@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -60,23 +59,6 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(MainActivity.this, Pref.class));
 		return true;
 	}
-
-
-
-	/**
-	 * On reviens sur cette activité après était sur une autre.
-	 */
-	/*protected void onResume() {
-		super.onResume();
-
-		// On recharge le nouveau listener après avoir changer l'ancien
-		this.SwitchOnOff.setChecked(false);
-		// Si le module Bluetooth n'est pas null -> Pas de Bluetooth ... Rien de select ...
-		if(((ManetteBluetooth)this.getApplication()).getModule() != null )
-		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
-
-	};
-	 */ 
 
 	/**
 	 * Appellé lors de la création de l'activité
@@ -124,39 +106,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-		SwitchOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-				if(!b)
-				{
-					try {
-						bt.getModule().closeBT();
-					}catch (Exception e)
-					{
-						Toast.makeText(getApplicationContext(), "L'apparail est déjà déconnecté", Toast.LENGTH_LONG).show();
-					}
-				}else
-				{
-					try
-					{
-						if(bt.getModule().findBT())
-						{
-							bt.getModule().openBT();
-						}
-						else
-							Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
-					} catch (IOException er)
-					{
-						er.printStackTrace();
-					}
-				}
-
-
-			}
-		});
-
-
+		
 		unBp = (Button) findViewById(R.id.Connec);
 
 		unBp.setOnClickListener(new OnClickListener() {
@@ -165,20 +115,29 @@ public class MainActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				try {
+					
+					
+					
 					if(!SwitchOnOff.isChecked())
-					{
+					{						
 						try
 						{
+							unBp.setClickable(false);
 							if(bt.getModule().findBT())
-							{
+							{	
 								bt.getModule().openBT();
-								unBp.setText("Déconnecter");
+								
 							}
 							else
+							{
 								Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
+								unBp.setClickable(true);
+	
+							}
 						} catch (IOException er)
 						{
 							er.printStackTrace();
+							unBp.setClickable(true);
 						}
 					}
 					else
@@ -213,9 +172,9 @@ public class MainActivity extends Activity {
 		public void onConnect()
 		{	
 			SwitchOnOff.setChecked(true);
-
+			unBp.setText("Déconnecter");
 			Toast.makeText(getApplicationContext(), "Connexion activée", Toast.LENGTH_LONG).show();
-
+			unBp.setClickable(true);
 		}
 		@Override
 		public void onDisconnect()
@@ -224,6 +183,8 @@ public class MainActivity extends Activity {
 			saProgressBar.setProgress(0);
 			unBp.setText("Connecter");
 			Toast.makeText(getApplicationContext(), "Connexion terminée", Toast.LENGTH_LONG).show();
+			unBp.setClickable(true);
+
 		}
 		@Override
 		public void onReceived(String data) {
@@ -262,12 +223,9 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-
-
 		@Override
 		public void OnReleased() {
 		}
-
 		@Override
 		public void OnReturnedToCenter() {
 		};

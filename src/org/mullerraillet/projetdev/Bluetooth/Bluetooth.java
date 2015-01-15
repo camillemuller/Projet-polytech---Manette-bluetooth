@@ -184,32 +184,32 @@ public class Bluetooth extends Activity
 	public void openBT() throws IOException
 	{
 
-		
-	if(mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
-	{
-						UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
-						
-							mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-							/** ATTENTION IMPORTANT
-							 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
-							 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
-							 * Use cancelDiscovery() to cancel an ongoing discovery.  
-							 * Discovery is not managed by the Activity, but is run as a system service,
-							 * so an application should always call cancelDiscovery() even if it did not directly request a discovery, 
-							 *  just to be sure.
-							 */
-							mBluetoothAdapter.cancelDiscovery();
-							mmSocket.connect();
-							mmOutputStream = mmSocket.getOutputStream();
-							mmInputStream = mmSocket.getInputStream();
-							
+
+		if(mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+		{
+			UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
+
+			mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+			/** ATTENTION IMPORTANT
+			 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
+			 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
+			 * Use cancelDiscovery() to cancel an ongoing discovery.  
+			 * Discovery is not managed by the Activity, but is run as a system service,
+			 * so an application should always call cancelDiscovery() even if it did not directly request a discovery, 
+			 *  just to be sure.
+			 */
+			mBluetoothAdapter.cancelDiscovery();
+			mmSocket.connect();
+			mmOutputStream = mmSocket.getOutputStream();
+			mmInputStream = mmSocket.getInputStream();
 
 
-				beginListenForData();
+
+			beginListenForData();
+		}
+
 	}
 
-
-	}
 
 	/**
 	 * Création du thread de reception des données bluetooth
@@ -281,15 +281,15 @@ public class Bluetooth extends Activity
 	{
 		if(goodForSend())
 		{
-		msg += "\n";
-		try
-		{
-			mmOutputStream.write(msg.getBytes());
-		}catch (Exception e)
-		{
-			Toast.makeText(mainContext, "Impossible de rafraichir l'apparail n'est pas syncroniser (ou plus)", Toast.LENGTH_LONG).show();
-			throw new IOException();
-		}
+			msg += "\n";
+			try
+			{
+				mmOutputStream.write(msg.getBytes());
+			}catch (Exception e)
+			{
+				Toast.makeText(mainContext, "Impossible de rafraichir l'apparail n'est pas syncroniser (ou plus)", Toast.LENGTH_LONG).show();
+				throw new IOException();
+			}
 		}
 	}
 
@@ -300,20 +300,20 @@ public class Bluetooth extends Activity
 	public void closeBT() throws IOException
 	{
 		stopWorker = true;
-		
+
 		mmOutputStream.close();
 		mmInputStream.close();
 		mmSocket.close();
-	
+
 	}
-	
+
 	private boolean goodForSend()
 	{
 		if(!stopWorker)
 		{
-		return true;
+			return true;
 		}else
-		return false;
+			return false;
 	}
 
 }
