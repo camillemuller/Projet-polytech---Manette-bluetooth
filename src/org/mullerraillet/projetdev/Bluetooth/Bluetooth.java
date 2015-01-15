@@ -41,7 +41,7 @@ public class Bluetooth extends Activity
 	private Thread workerThread,beginThread;
 	private byte[] readBuffer;
 	private int readBufferPosition;
-	private volatile boolean stopWorker;
+	private volatile boolean stopWorker = true;
 	private String lesData;
 	private Context mainContext;
 	private BluetoothListener sonListener;
@@ -129,7 +129,6 @@ public class Bluetooth extends Activity
 					paraidDevices.add(device.getName());
 				}
 			}
-
 		}
 		catch(NullPointerException e)
 		{
@@ -185,22 +184,12 @@ public class Bluetooth extends Activity
 	public void openBT() throws IOException
 	{
 
-
-		if(beginThread != null)
-		{
-			if(!beginThread.isAlive())
-			{
-				beginThread = new Thread(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-
+		
+	if(mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+	{
 						UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
-						try
-						{
+						
 							mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-							
 							/** ATTENTION IMPORTANT
 							 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
 							 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
@@ -210,69 +199,16 @@ public class Bluetooth extends Activity
 							 *  just to be sure.
 							 */
 							mBluetoothAdapter.cancelDiscovery();
-							
 							mmSocket.connect();
 							mmOutputStream = mmSocket.getOutputStream();
 							mmInputStream = mmSocket.getInputStream();
+							
 
 
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
-					}
-
-
-				});
-
-
-				beginThread.start();
 				beginListenForData();
-			}
-		}
-		else
-		{
-			beginThread = new Thread(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-
-					UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
-					try
-					{
-						mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-						
-						/** ATTENTION IMPORTANT
-						 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
-						 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
-						 * Use cancelDiscovery() to cancel an ongoing discovery.  
-						 * Discovery is not managed by the Activity, but is run as a system service,
-						 * so an application should always call cancelDiscovery() even if it did not directly request a discovery, 
-						 *  just to be sure.
-						 */
-						mBluetoothAdapter.cancelDiscovery();
-						
-						mmSocket.connect();
-						mmOutputStream = mmSocket.getOutputStream();
-						mmInputStream = mmSocket.getInputStream();
+	}
 
 
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-
-
-			});
-
-
-			beginThread.start();
-			beginListenForData();
-		}
 	}
 
 	/**
@@ -291,7 +227,7 @@ public class Bluetooth extends Activity
 			@Override
 			public void run()
 			{
-				while(!Thread.currentThread().isInterrupted() && !stopWorker && !beginThread.isAlive())
+				while(!Thread.currentThread().isInterrupted() && !stopWorker )
 				{
 					try
 					{
@@ -343,6 +279,8 @@ public class Bluetooth extends Activity
 	 */
 	public void sendData(String msg) throws IOException
 	{
+		if(goodForSend())
+		{
 		msg += "\n";
 		try
 		{
@@ -352,7 +290,7 @@ public class Bluetooth extends Activity
 			Toast.makeText(mainContext, "Impossible de rafraichir l'apparail n'est pas syncroniser (ou plus)", Toast.LENGTH_LONG).show();
 			throw new IOException();
 		}
-
+		}
 	}
 
 	/**
@@ -367,6 +305,15 @@ public class Bluetooth extends Activity
 		mmInputStream.close();
 		mmSocket.close();
 	
+	}
+	
+	private boolean goodForSend()
+	{
+		if(!stopWorker)
+		{
+		return true;
+		}else
+		return false;
 	}
 
 }

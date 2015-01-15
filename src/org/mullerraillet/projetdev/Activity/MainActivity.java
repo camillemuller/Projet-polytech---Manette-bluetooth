@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 	private String vitesse = "1"; // Vitesse normal
 	private ProgressBar saProgressBar;
 	private ToggleButton SwitchOnOff;
-
+	private  Button unBp;
 
 
 
@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 							Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
 					} catch (IOException er)
 					{
-						SwitchOnOff.setChecked(false);
+						er.printStackTrace();
 					}
 				}
 
@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
 		});
 
 
-		Button unBp = (Button) findViewById(R.id.Connec);
+		unBp = (Button) findViewById(R.id.Connec);
 
 		unBp.setOnClickListener(new OnClickListener() {
 
@@ -172,17 +172,19 @@ public class MainActivity extends Activity {
 							if(bt.getModule().findBT())
 							{
 								bt.getModule().openBT();
+								unBp.setText("Déconnecter");
 							}
 							else
 								Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
 						} catch (IOException er)
 						{
-							SwitchOnOff.setChecked(false);
+							er.printStackTrace();
 						}
 					}
 					else
 					{
 						bt.getModule().closeBT();
+						unBp.setText("Connecter");
 					}
 				}catch(Exception e)
 				{
@@ -209,19 +211,30 @@ public class MainActivity extends Activity {
 	{
 		@Override
 		public void onConnect()
-		{
+		{	
 			SwitchOnOff.setChecked(true);
+
+			Toast.makeText(getApplicationContext(), "Connexion activée", Toast.LENGTH_LONG).show();
+
 		}
 		@Override
 		public void onDisconnect()
 		{
 			SwitchOnOff.setChecked(false);
-			Toast.makeText(getApplicationContext(), "Connexion perdue", Toast.LENGTH_LONG).show();
+			saProgressBar.setProgress(0);
+			unBp.setText("Connecter");
+			Toast.makeText(getApplicationContext(), "Connexion terminée", Toast.LENGTH_LONG).show();
 		}
 		@Override
 		public void onReceived(String data) {
 			// TODO Auto-generated method stub
+			try
+			{
 			saProgressBar.setProgress(Integer.parseInt( data.substring(data.indexOf(",")+1, data.indexOf("]"))));
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 	};

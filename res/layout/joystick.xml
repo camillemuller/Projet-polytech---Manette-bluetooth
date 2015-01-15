@@ -63,118 +63,88 @@
                 android:layout_marginBottom="24dp" />
         </RelativeLayout>
 
-        <TableLayout
+        <ProgressBar
+            android:id="@+id/chargementBatterie"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/relativeLayout2"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" >
+            android:layout_alignTop="@+id/ToggleButtun1"
+            android:layout_marginRight="9dp"
+            android:layout_marginTop="10dp" />
 
-            <TableRow
-                android:id="@+id/tableRow6"
+        <ToggleButton
+            android:id="@+id/ToggleButtun1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="19dp"
+            android:layout_toLeftOf="@+id/chargementBatterie"
+            android:clickable="false"
+            android:longClickable="false"
+            android:text="ToggleButton" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_alignLeft="@+id/Connec"
+            android:layout_alignRight="@+id/chargementBatterie"
+            android:layout_below="@+id/radioGroup1"
+            android:layout_marginTop="9dp" >
+
+            <Button
+                android:id="@+id/button1"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="Klaxon" />
+        </RelativeLayout>
 
-                <Button
-                    android:id="@+id/Connec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="17dp"
-                    android:layout_marginTop="19dp"
-                    android:text="Connexion" />
+        <Button
+            android:id="@+id/Connec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/ToggleButtun1"
+            android:layout_marginLeft="14dp"
+            android:text="Connecter" />
 
-                <TextView
-                    android:id="@+id/TextView01"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Etat :"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Connec"
+            android:layout_marginTop="14dp"
+            android:layout_toLeftOf="@+id/ToggleButtun1" >
 
-                <ToggleButton
-                    android:id="@+id/ToggleButtun1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="31dp"
-                    android:layout_marginTop="19dp"
-                    android:clickable="false"
-                    android:longClickable="false"
-                    android:text="ToggleButton" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow3"
+            <RadioButton
+                android:id="@+id/radio0"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Normal" />
 
-                <TextView
-                    android:id="@+id/TextView03"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:text="Vitesse :"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroup1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <RadioButton
-                        android:id="@+id/radio0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Normal" />
-
-                    <RadioButton
-                        android:id="@+id/radio2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lent" />
-                </RadioGroup>
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow4"
+            <RadioButton
+                android:id="@+id/radio2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:text="Lent" />
+        </RadioGroup>
 
-                <TextView
-                    android:id="@+id/TextView02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:text="Batterie :"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ProgressBar
-                    android:id="@+id/chargementBatterie"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="7dp" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <Button
-                    android:id="@+id/button1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Klaxon" />
-
-            </TableRow>
-
-        </TableLayout>
-
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/radioGroup1"
+            android:layout_alignLeft="@+id/relativeLayout1"
+            android:layout_marginBottom="34dp"
+            android:text="Vitesse :"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
 </LinearLayout>
