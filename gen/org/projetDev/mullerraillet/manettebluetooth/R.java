@@ -68,26 +68,29 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int TextView01=0x7f09000e;
-        public static final int TextView02=0x7f09000d;
-        public static final int TextView03=0x7f090012;
+        public static final int Connec=0x7f090009;
+        public static final int TextView01=0x7f09000a;
+        public static final int TextView02=0x7f090012;
+        public static final int TextView03=0x7f09000d;
         public static final int TextViewX=0x7f090003;
         public static final int TextViewY=0x7f090006;
-        public static final int ToggleButtun1=0x7f09000c;
-        public static final int button1=0x7f09000a;
-        public static final int chargementBatterie=0x7f09000b;
+        public static final int ToggleButtun1=0x7f09000b;
+        public static final int button1=0x7f090015;
+        public static final int chargementBatterie=0x7f090013;
         public static final int joystickView=0x7f090007;
-        public static final int menu_search=0x7f090013;
-        public static final int radio0=0x7f090010;
-        public static final int radio2=0x7f090011;
-        public static final int radioGroup1=0x7f09000f;
-        public static final int relativeLayout1=0x7f090008;
+        public static final int menu_search=0x7f090016;
+        public static final int radio0=0x7f09000f;
+        public static final int radio2=0x7f090010;
+        public static final int radioGroup1=0x7f09000e;
         public static final int relativeLayout2=0x7f090000;
         public static final int tableRow1=0x7f090001;
         public static final int tableRow2=0x7f090004;
+        public static final int tableRow3=0x7f09000c;
+        public static final int tableRow4=0x7f090011;
+        public static final int tableRow5=0x7f090014;
+        public static final int tableRow6=0x7f090008;
         public static final int textView1=0x7f090002;
         public static final int textView2=0x7f090005;
-        public static final int textView3=0x7f090009;
     }
     public static final class layout {
         public static final int joystick=0x7f030000;
@@ -96,24 +99,14 @@ containing a value of this type.
         public static final int activity_main=0x7f080000;
     }
     public static final class string {
-        public static final int StandardTextChangedEvent=0x7f07000b;
+        public static final int StandardTextChangedEvent=0x7f070003;
         /**  ThreasholdEditText strings 
          */
-        public static final int ThresholdTextChangedEventValue=0x7f07000a;
-        public static final int UserInput=0x7f07000c;
+        public static final int ThresholdTextChangedEventValue=0x7f070002;
+        public static final int UserInput=0x7f070004;
         public static final int app_name=0x7f070001;
-        public static final int dockpanel_horizontal=0x7f070004;
-        public static final int dockpanel_vertical=0x7f070005;
-        public static final int draganddrop=0x7f070009;
-        public static final int dualjoystick=0x7f070007;
-        public static final int joystick=0x7f070006;
-        public static final int returnString=0x7f07000d;
-        /**  Main menu resources 
-         */
-        public static final int select_widget=0x7f070002;
+        public static final int returnString=0x7f070005;
         public static final int sortablelist=0x7f070000;
-        public static final int threasholdedittext=0x7f070003;
-        public static final int tileslayout=0x7f070008;
     }
     public static final class xml {
         public static final int preferences=0x7f040000;

@@ -6,12 +6,13 @@
     
     
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="10"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     
     
@@ -21,7 +22,7 @@
         android:label="@string/app_name" 
         android:allowBackup="true">
     
-                    <activity android:name="org.mullerraillet.projetdev.Activity.Pref" >
+          <activity android:name="org.mullerraillet.projetdev.Activity.Pref" >
         </activity>
     
         <activity

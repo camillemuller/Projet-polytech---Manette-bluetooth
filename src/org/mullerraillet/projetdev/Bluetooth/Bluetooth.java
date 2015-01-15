@@ -38,20 +38,20 @@ public class Bluetooth extends Activity
 	private static BluetoothDevice mmDevice;
 	private OutputStream mmOutputStream;
 	private InputStream mmInputStream;
-	private Thread workerThread;
+	private Thread workerThread,beginThread;
 	private byte[] readBuffer;
 	private int readBufferPosition;
 	private volatile boolean stopWorker;
 	private String lesData;
 	private Context mainContext;
 	private BluetoothListener sonListener;
-	
-	
+
+
 
 
 
 	private  BluetoothReceiver sonBluetoothReceiver;
-	private final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
+	private static final String SSProfile = "00001101-0000-1000-8000-00805f9b34fb";
 	private String DeviceName;
 
 
@@ -59,7 +59,7 @@ public class Bluetooth extends Activity
 	public void setOnBluetoothListener(BluetoothListener unListener){
 		sonListener= unListener;
 	}
- 
+
 	String getLesData()
 	{
 		return this.lesData;
@@ -76,7 +76,7 @@ public class Bluetooth extends Activity
 	public Bluetooth()
 	{
 	}
-	
+
 	/**
 	 * Constructeur permettant d'avoir le context et de choisir un module
 	 * @param mainContext
@@ -86,8 +86,9 @@ public class Bluetooth extends Activity
 	{
 		this.mainContext = mainContext;
 		this.DeviceName = module;
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
-	
+
 	public BluetoothListener getSonListener() {
 		return sonListener;
 	}
@@ -95,7 +96,7 @@ public class Bluetooth extends Activity
 	public void setSonListener(BluetoothListener sonListener) {
 		this.sonListener = sonListener;
 	}
-	
+
 
 
 	/** Called when the activity is first created. */
@@ -111,31 +112,31 @@ public class Bluetooth extends Activity
 			LocalBroadcastManager.getInstance(this).registerReceiver(new BluetoothReceiver(), filter);
 		}
 	}
-	
-	
-	
+
+
+
 	public List<String> getListpairedDevices()
 	{
 		List<String> paraidDevices = new ArrayList<String>();
-		
+
 		try
 		{
-		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-		if(pairedDevices.size() > 0)
-		{
-			for(BluetoothDevice device : pairedDevices)
+			Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+			if(pairedDevices.size() > 0)
 			{
-				paraidDevices.add(device.getName());
+				for(BluetoothDevice device : pairedDevices)
+				{
+					paraidDevices.add(device.getName());
+				}
 			}
-		}
-	
+
 		}
 		catch(NullPointerException e)
 		{
 
 		}
 		return paraidDevices;
-		
+
 	}
 
 
@@ -146,7 +147,7 @@ public class Bluetooth extends Activity
 	 */
 	public boolean findBT() throws IOException
 	{
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
 		boolean flag= false;
 		if(mBluetoothAdapter == null)
 		{
@@ -183,23 +184,96 @@ public class Bluetooth extends Activity
 	 */
 	public void openBT() throws IOException
 	{
-		UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
 
-		try
-		{mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-		}
-		catch (Exception e)
+
+		if(beginThread != null)
 		{
-			Toast.makeText(mainContext, "Probleme de communication", Toast.LENGTH_LONG).show();
-			throw new IOException();
+			if(!beginThread.isAlive())
+			{
+				beginThread = new Thread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+
+						UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
+						try
+						{
+							mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+							
+							/** ATTENTION IMPORTANT
+							 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
+							 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
+							 * Use cancelDiscovery() to cancel an ongoing discovery.  
+							 * Discovery is not managed by the Activity, but is run as a system service,
+							 * so an application should always call cancelDiscovery() even if it did not directly request a discovery, 
+							 *  just to be sure.
+							 */
+							mBluetoothAdapter.cancelDiscovery();
+							
+							mmSocket.connect();
+							mmOutputStream = mmSocket.getOutputStream();
+							mmInputStream = mmSocket.getInputStream();
+
+
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
+
+
+				});
+
+
+				beginThread.start();
+				beginListenForData();
+			}
 		}
-		mmSocket.connect();
-		mmOutputStream = mmSocket.getOutputStream();
-		mmInputStream = mmSocket.getInputStream();
-		beginListenForData();
+		else
+		{
+			beginThread = new Thread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
 
+					UUID uuid = UUID.fromString(SSProfile); //Standard SerialPortService ID
+					try
+					{
+						mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+						
+						/** ATTENTION IMPORTANT
+						 * Creating new connections to remote Bluetooth devices should not be attempted while device discovery is in progress. 
+						 * Device discovery is a heavyweight procedure on the Bluetooth adapter  and will significantly slow a device connection. 
+						 * Use cancelDiscovery() to cancel an ongoing discovery.  
+						 * Discovery is not managed by the Activity, but is run as a system service,
+						 * so an application should always call cancelDiscovery() even if it did not directly request a discovery, 
+						 *  just to be sure.
+						 */
+						mBluetoothAdapter.cancelDiscovery();
+						
+						mmSocket.connect();
+						mmOutputStream = mmSocket.getOutputStream();
+						mmInputStream = mmSocket.getInputStream();
+
+
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+
+
+			});
+
+
+			beginThread.start();
+			beginListenForData();
+		}
 	}
-
 
 	/**
 	 * Création du thread de reception des données bluetooth
@@ -217,7 +291,7 @@ public class Bluetooth extends Activity
 			@Override
 			public void run()
 			{
-				while(!Thread.currentThread().isInterrupted() && !stopWorker)
+				while(!Thread.currentThread().isInterrupted() && !stopWorker && !beginThread.isAlive())
 				{
 					try
 					{
@@ -240,7 +314,7 @@ public class Bluetooth extends Activity
 										@Override
 										public void run()
 										{											
-												sonListener.onReceived(data);
+											sonListener.onReceived(data);
 										}
 									});
 								}
@@ -288,9 +362,11 @@ public class Bluetooth extends Activity
 	public void closeBT() throws IOException
 	{
 		stopWorker = true;
+		
 		mmOutputStream.close();
 		mmInputStream.close();
 		mmSocket.close();
+	
 	}
 
 }

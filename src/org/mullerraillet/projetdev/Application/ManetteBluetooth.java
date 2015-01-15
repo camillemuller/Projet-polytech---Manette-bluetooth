@@ -19,7 +19,7 @@ public class ManetteBluetooth extends Application {
 		/* Create and setup the model with saved values */
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		createBluetooth( prefs.getString("moduleBluetooth", "0"));
+		createBluetooth( prefs.getString("bt_mod", "0"));
 	}
 
 	

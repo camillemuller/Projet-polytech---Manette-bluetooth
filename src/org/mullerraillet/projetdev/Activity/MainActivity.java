@@ -38,9 +38,9 @@ public class MainActivity extends Activity {
 	private String vitesse = "1"; // Vitesse normal
 	private ProgressBar saProgressBar;
 	private ToggleButton SwitchOnOff;
-	
-	
-	
+
+
+
 
 	/**
 	 * Action effectuée lorsque l'on appuis sur le bouton Menu
@@ -60,13 +60,13 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(MainActivity.this, Pref.class));
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * On reviens sur cette activité après était sur une autre.
 	 */
-	protected void onResume() {
+	/*protected void onResume() {
 		super.onResume();
 
 		// On recharge le nouveau listener après avoir changer l'ancien
@@ -76,7 +76,8 @@ public class MainActivity extends Activity {
 		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
 
 	};
-	
+	 */ 
+
 	/**
 	 * Appellé lors de la création de l'activité
 	 */
@@ -87,15 +88,15 @@ public class MainActivity extends Activity {
 
 		saProgressBar = (ProgressBar) findViewById(R.id.chargementBatterie);
 		//bt = new Bluetooth(getApplicationContext());
-		
+
 		bt = (ManetteBluetooth) this.getApplication();
 
 		SwitchOnOff = (ToggleButton)  findViewById(R.id.ToggleButtun1);
 		final RadioGroup RG = (RadioGroup) findViewById(R.id.radioGroup1);
 		final Button klaxon = (Button) findViewById(R.id.button1);
 
-		
-			
+
+
 		klaxon.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -103,7 +104,7 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				try {
 					if(SwitchOnOff.isChecked())
-					bt.getModule().sendData("[B]\n");
+						bt.getModule().sendData("[B]\n");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -126,10 +127,11 @@ public class MainActivity extends Activity {
 		SwitchOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
 				if(!b)
 				{
 					try {
-						bt.getModule().closeBT(); 
+						bt.getModule().closeBT();
 					}catch (Exception e)
 					{
 						Toast.makeText(getApplicationContext(), "L'apparail est déjà déconnecté", Toast.LENGTH_LONG).show();
@@ -139,7 +141,9 @@ public class MainActivity extends Activity {
 					try
 					{
 						if(bt.getModule().findBT())
+						{
 							bt.getModule().openBT();
+						}
 						else
 							Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
 					} catch (IOException er)
@@ -147,15 +151,53 @@ public class MainActivity extends Activity {
 						SwitchOnOff.setChecked(false);
 					}
 				}
+
+
 			}
 		});
+
+
+		Button unBp = (Button) findViewById(R.id.Connec);
+
+		unBp.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				try {
+					if(!SwitchOnOff.isChecked())
+					{
+						try
+						{
+							if(bt.getModule().findBT())
+							{
+								bt.getModule().openBT();
+							}
+							else
+								Toast.makeText(getApplicationContext(), "L'apparail non appareillé ", Toast.LENGTH_LONG).show();
+						} catch (IOException er)
+						{
+							SwitchOnOff.setChecked(false);
+						}
+					}
+					else
+					{
+						bt.getModule().closeBT();
+					}
+				}catch(Exception e)
+				{
+
+				}
+
+			}});
+
 		txtX = (TextView)findViewById(R.id.TextViewX);
 		txtY = (TextView)findViewById(R.id.TextViewY);
 		joystick = (JoystickView)findViewById(R.id.joystickView);
 		joystick.setOnJostickMovedListener(_listener);
-		
-		
-		
+
+
+
 		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
 	}
 
@@ -183,7 +225,7 @@ public class MainActivity extends Activity {
 		}
 
 	};
- 
+
 
 
 	/**
@@ -201,7 +243,7 @@ public class MainActivity extends Activity {
 			txtY.setText(": "+Integer.toString(tilt));
 			try {
 				if(SwitchOnOff.isChecked())
-				bt.getModule().sendData("[CMD,"+Integer.toString(pan)+","+Integer.toString(tilt)+","+vitesse+"]\n");
+					bt.getModule().sendData("[CMD,"+Integer.toString(pan)+","+Integer.toString(tilt)+","+vitesse+"]\n");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -215,15 +257,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void OnReturnedToCenter() {
-			txtX.setText(": "+Integer.toString(0));
-			txtY.setText(": "+Integer.toString(0));
-			try {
-				if(SwitchOnOff.isChecked())
-				bt.getModule().sendData("[CMD,"+Integer.toString(0)+","+Integer.toString(0)+","+vitesse+"]\n");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		};
 	}; 
 }

@@ -5,13 +5,14 @@ package org.mullerraillet.projetdev.Activity;
 
 import java.util.List;
 
+
 import org.mullerraillet.projetdev.Application.ManetteBluetooth;
 import org.projetDev.mullerraillet.manettebluetooth.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -29,7 +30,7 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		lp.setEntries(entries);
 		lp.setEntryValues(values);
 	}
-	
+
 
 	@SuppressWarnings("deprecation")
 	public void loadSettings() {
@@ -39,8 +40,8 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 
 		if (!ModuleBluetooth.equals("none")) {
-			
-			((ListPreference) findPreference("moduleBluetooth")).setValue(ModuleBluetooth);
+
+			((ListPreference) findPreference("bt_mod")).setValue(ModuleBluetooth);
 
 		}
 	}
@@ -52,18 +53,22 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 
 
-	
 		/* Inflate from XML */
 		this.addPreferencesFromResource(R.xml.preferences);
 
 
 		/* Loading preferences already existing */
-		this.loadSettings();
+		//this.loadSettings();
 
-		
+
 		/* Try to fetch the Bluetooth list */
-		new SyncBluetoothList().execute((ManetteBluetooth)this.getApplication());
-		
+		List<String> pairedDevices= ((ManetteBluetooth)this.getApplication()).getModule().getListpairedDevices();
+
+
+
+
+
+
 		/* Preference change listener */
 		PreferenceManager.getDefaultSharedPreferences(this)
 		.registerOnSharedPreferenceChangeListener(this);
@@ -81,6 +86,27 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 		});
 
 
+
+		if(pairedDevices.size() > 0 )
+		{
+			String[] entries = new String[pairedDevices.size()];
+			String[] values = new String[pairedDevices.size()];
+
+			int i = 0;
+			for (String pairedDevice : pairedDevices) {
+				entries[i] = pairedDevice;
+				values[i] = pairedDevice;
+				i++;
+			}
+
+
+			Pref.this.setEntries("bt_mod", entries, values);
+			((ListPreference) findPreference("bt_mod")).setEnabled(true);
+
+		}
+
+
+
 		Preference aboutBt = (Preference)findPreference("AboutBt");
 		aboutBt.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -91,8 +117,9 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 				return true;
 			}
 		});
-		
-		
+
+		/* Loading preferences already existing */
+		this.loadSettings();
 
 	}
 
@@ -115,54 +142,25 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-		
-			/* Return to previous Activity */
-			this.finish();
+
+
+		if(key.contains("bt_mod"))
+		{
+
+			((ManetteBluetooth)this.getApplication()).createBluetooth(sp.getString("bt_mod", "0"));
+		}
+		/* Return to previous Activity */
+		this.finish();
 
 
 	}
-	
-	
-	
-	private class SyncBluetoothList extends AsyncTask<ManetteBluetooth, Void, Integer>
-	{
-		
-		private List<String> pairedDevices;
-
-		@Override
-		protected Integer doInBackground(ManetteBluetooth... params) {
-			// TODO Auto-generated method stub
-			pairedDevices =  params[0].getModule().getListpairedDevices();
-			return null;
-		}
-		
-		@SuppressWarnings("deprecation")
-		protected void onPostExecute(Integer result) {
 
 
-			if(pairedDevices.size() > 0 )
-			{
-			String[] entries = new String[pairedDevices.size()];
-			String[] values = new String[pairedDevices.size()];
-
-			int i = 0;
-			for (String pairedDevice : pairedDevices) {
-				entries[i] = pairedDevice;
-				values[i] = pairedDevice;
-				i++;
-			}
-
-			Pref.this.setEntries("moduleBluetooth", entries, values);
-			
-			((ListPreference) findPreference("moduleBluetooth")).setEnabled(true);
-			}
-			
-		}
-	}
-	
-	
 
 
-	
-	
 }
+
+
+
+
+
