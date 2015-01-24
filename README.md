@@ -7,7 +7,8 @@ Cette application fonctionne avec le module bluetooth HC-06.
 
 #####
 
-Cmmande envoyée sur la liaison Bluetooth :
+Commande envoyée sur la liaison Bluetooth :
+
 • [CMD,X,Y,V] : Lors d'un mouvement du joystick CMD = Commande joystick, X = Valeur égale au variant de -100 à 100 sur l'axe X
 ,Y variant de -100 à 100 sur l'axe Y, égale à 1 en vitesse rapide, 0 en vitesse lent.
 
