@@ -40,7 +40,6 @@ SharedPreferences.OnSharedPreferenceChangeListener {
 
 
 		if (!ModuleBluetooth.equals("none")) {
-
 			((ListPreference) findPreference("bt_mod")).setValue(ModuleBluetooth);
 
 		}

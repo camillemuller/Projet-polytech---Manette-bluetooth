@@ -8,6 +8,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ManetteBluetooth extends Application {
 	private Bluetooth module;
@@ -37,9 +38,9 @@ public class ManetteBluetooth extends Application {
 	 */
 	public void createBluetooth(String unModule)
 	{
+		Log.d("TEST",unModule);
 		if(unModule != "")
 		{	this.module = new Bluetooth(this.getApplicationContext(),unModule);
-
 		}
 
 	}

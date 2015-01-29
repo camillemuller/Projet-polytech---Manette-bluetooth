@@ -38,7 +38,7 @@ public class Bluetooth extends Activity
 	private static BluetoothDevice mmDevice;
 	private OutputStream mmOutputStream;
 	private InputStream mmInputStream;
-	private Thread workerThread,beginThread;
+	private Thread workerThread;
 	private byte[] readBuffer;
 	private int readBufferPosition;
 	private volatile boolean stopWorker = true;

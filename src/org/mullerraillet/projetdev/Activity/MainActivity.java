@@ -59,6 +59,14 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(MainActivity.this, Pref.class));
 		return true;
 	}
+	
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
+	}
 
 	/**
 	 * Appellé lors de la création de l'activité
@@ -161,6 +169,9 @@ public class MainActivity extends Activity {
 
 		bt.getModule().setOnBluetoothListener(_ListenerBluetooth);
 	}
+	
+	
+	
 
 
 	/**
